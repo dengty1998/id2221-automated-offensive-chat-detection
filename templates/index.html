@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <title>Chat</title>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Chat
+                </div>
+                <div class="card-body" id="chat">
+                </div>
+                <div class="card-footer">
+                    <input type="text" id="username" placeholder="username" class="form-control mb-2">
+                    <input type="text" id="room" placeholder="input channel name" class="form-control mb-2">
+                    <button class="btn btn-warning mb-2" onclick="joinRoom()">join</button>
+                    <textarea id="message" class="form-control mb-2" placeholder="input message"></textarea>
+                    <button class="btn btn-primary" onclick="sendMessage()">send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+
+    function joinRoom() {
+        socket.emit('join', { 'username': document.getElementById('username').value, 'room': document.getElementById('room').value });
+    }
+
+    function sendMessage() {
+        socket.emit('text', { 'msg': document.getElementById('message').value, 'username': document.getElementById('username').value, 'room': document.getElementById('room').value });
+    }
+
+    window.onbeforeunload = function() {
+        socket.emit('left', { 'username': document.getElementById('username').value, 'room': document.getElementById('room').value });
+    };
+
+    socket.on('message', function(data) {
+        var p = document.createElement('p');
+        p.innerHTML = data['msg'];
+        document.getElementById('chat').appendChild(p);
+    });
+</script>
+
+</body>
+</html>
