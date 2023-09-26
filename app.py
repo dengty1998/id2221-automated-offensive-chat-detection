@@ -26,5 +26,7 @@ def left(message):
     leave_room(room)
     send({'msg': message['username'] + " leave the channel."}, room=room)
 
+# change network profile from public to private then replace host argument with server's ip
 if __name__ == '__main__':
-    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
+    socketio.run(app,# host = '130.229.130.154', port = 5000, 
+                 debug=True, allow_unsafe_werkzeug=True)
