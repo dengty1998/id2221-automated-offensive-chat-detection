@@ -13,12 +13,12 @@ def index():
 def join(message):
     room = message['room']
     join_room(room)
-    send({'msg': message['username'] + " join the channel."}, room=room)
+    send({'msg': message['username'] + " join the " + message['room'] + " channel."}, room=room)
 
 @socketio.on('text', namespace='/chat')
 def text(message):
     room = message['room']
-    send({'msg': message['username'] + ": " + message['msg']}, room=room)
+    send({'msg': message['username'] +"["+ message['room'] + "]: " + message['msg']}, room=room)
 
 @socketio.on('left', namespace='/chat')
 def left(message):
