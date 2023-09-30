@@ -24,6 +24,7 @@
                     <input type="text" id="username" placeholder="username" class="form-control mb-2">
                     <input type="text" id="room" placeholder="input channel name" class="form-control mb-2">
                     <button class="btn btn-warning mb-2" onclick="joinRoom()">join</button>
+                    <button class="btn btn-warning mb-2" onclick="leaveRoom()">leave</button>
                     <textarea id="message" class="form-control mb-2" placeholder="input message"></textarea>
                     <button class="btn btn-primary" onclick="sendMessage()">send</button>
                 </div>
@@ -43,7 +44,7 @@
         socket.emit('text', { 'msg': document.getElementById('message').value, 'username': document.getElementById('username').value, 'room': document.getElementById('room').value });
     }
 
-    window.onbeforeunload = function() {
+    function leaveRoom() {
         socket.emit('left', { 'username': document.getElementById('username').value, 'room': document.getElementById('room').value });
     };
 
