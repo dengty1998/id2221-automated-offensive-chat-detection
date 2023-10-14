@@ -61,7 +61,8 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('index.html')
+    username = current_user.get_id()
+    return render_template('index.html', username=username)
 
 
 @socketio.on('join', namespace='/chat')
