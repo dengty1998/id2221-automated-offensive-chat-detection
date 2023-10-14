@@ -53,6 +53,12 @@
       </div>
     </div>
 
+    <br />
+    <br />
+    <div style="text-align: center">
+      <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    </div>
+
     <script>
       var socket = io.connect(
         "http://" + document.domain + ":" + location.port + "/chat"
