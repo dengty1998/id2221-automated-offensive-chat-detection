@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room, leave_room, send
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import json
+from datetime import datetime
+import fileinput
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -80,6 +83,17 @@ def text(message):
     room = message['room']
     send({'msg': message['username'] + "[" +
          message['room'] + "]: " + message['msg']}, room=room)
+
+    current_datetime = datetime.now()
+    timestamp = current_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+
+    json_text = {
+        'username': str(message['username']),
+        'message': str(message['msg']),
+        'timestamp': str(timestamp),
+    }
+
+    json_file_path = "D:/Workspace/ID2221/generated.json"
 
 
 @socketio.on('left', namespace='/chat')
