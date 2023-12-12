@@ -49,6 +49,15 @@
               <button class="btn btn-primary" onclick="sendMessage()">
                 send
               </button>
+              <input
+                type="text"
+                id="report"
+                placeholder="input username"
+                class="form-control mb-2"
+              />
+              <button class="btn btn-danger" onclick="reportUser()">
+                report
+              </button>
             </div>
           </div>
         </div>
@@ -87,6 +96,48 @@
           room: document.getElementById("room").value,
         });
       }
+
+
+
+      function reportUser() {
+        const reportedUsername = document.getElementById("report").value;
+
+        alert("Reported " + reportedUsername + " successfully!")
+
+        socket.emit("reportUser", {
+          reportedUsername: reportedUsername,
+        });
+      }
+
+      socket.on("receiveReport", function (data) {
+        const reportedName = data.name;
+        const username = document.getElementById("username").value;
+
+        console.log(reportedName)
+        console.log(username)
+
+        if (reportedName === username) {
+          alert( "You have been reported because of your recent speech. We will check and feedback to you very soon. This is your recent record: \r\n" + data.message );
+        }
+      });
+
+
+      const textarea = document.getElementById('message');
+
+      socket.emit('text');
+
+
+      socket.on('contain_offensive_language', function(data) {
+
+        if (data.value === true) {
+            textarea.disabled = true;
+            alert("You are banned from chatting!")
+        } else {
+            textarea.disabled = false;
+        }
+      });
+
+
 
       socket.on("message", function (data) {
         var p = document.createElement("p");

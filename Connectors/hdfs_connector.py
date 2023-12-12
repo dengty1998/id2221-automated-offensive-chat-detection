@@ -1,3 +1,5 @@
+import json
+
 from hdfs import InsecureClient
 
 
@@ -10,7 +12,7 @@ def init_hdfs_connection():
     # Initialize the HDFS client
     hdfs_host = 'localhost'
     hdfs_port = 9870 # Default HDFS port
-    hdfs_user = 'minhao'
+    hdfs_user = 'dty'
 
     client = InsecureClient(f'http://{hdfs_host}:{hdfs_port}', user=hdfs_user)
 
@@ -44,21 +46,29 @@ def init_hdfs(hdfs_paths, json_paths):
         upload_json(f'{hdfs_path}/{json_path}', json_path)
 
 
-'''
-To be Decided
-'''
-def append_json(hdfs_path):
-
-    pass
-
-'''
-To be decided
-'''
-
-
 def read_json(hdfs_path):
 
-    pass
+    client = init_hdfs_connection()
+    with client.read(hdfs_path) as reader:
+        existing_data = json.load(reader)
+
+    return existing_data
+
+
+def append_json(hdfs_path, new_data):
+
+
+    existing_data = read_json(hdfs_path)
+    existing_data.append(new_data)
+
+    # Convert the combined data to JSON
+    appended_json = json.dumps(existing_data)
+
+    client = init_hdfs_connection()
+
+    # Write the updated JSON back to HDFS
+    with client.write(hdfs_path, overwrite=True) as writer:
+        writer.write(appended_json)
 
 
 
